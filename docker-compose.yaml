@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  ISAAC-floor-database:
+    image: mysql
+    networks:
+      - ISAAC-network
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: isaac
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+
+  ISAAC-sensor-database:
+    image: mysql
+    networks:
+      - ISAAC-network
+    ports:
+      - 3307:3307
+    environment:
+      MYSQL_ROOT_PASSWORD: isaac
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+
+  ISAAC-sensor-log-database:
+    image: mysql
+    networks:
+      - ISAAC-network
+    ports:
+      - 3308:3308
+    environment:
+      MYSQL_ROOT_PASSWORD: isaac
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+
+  ISAAC-floor-phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    networks:
+      - ISAAC-network
+    ports:
+      - 8080:8080
+    environment:
+      PMA_HOST: ISAAC-floor-database
+    depends_on:
+      - ISAAC-floor-database
+  
+  ISAAC-sensor-phpmydamin:
+    image: phpmyadmin/phpmyadmin
+    networks:
+      - ISAAC-network
+    ports:
+      - 8081:8081
+    environment:
+      PMA_HOST: ISAAC-sensor-database
+    depends_on:
+      - ISAAC-sensor-database
+
+  ISAAC-sensor-log-phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    networks:
+      - ISAAC-network
+    ports:
+      - 8082:8082
+    environment:
+      PMA_HOST: ISAAC-sensor-log-database
+    depends_on:
+      - ISAAC-sensor-log-database
+
+networks:
+  ISAAC-network:
