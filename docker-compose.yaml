@@ -6,8 +6,9 @@ services:
       - ISAAC-network
     ports:
       - 3306:3306
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_DATABASE: isaac
       MYSQL_ROOT_PASSWORD: isaac
 
   ISAAC-sensor-database:
