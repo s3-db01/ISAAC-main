@@ -1,68 +1,70 @@
 version: '3.7'
+
 services:
   ISAAC-floor-database:
     image: mysql
-    networks:
-      - ISAAC-network
-    ports:
-      - 3306:3306
-    volumes:
-      - ./sql-scripts:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: isaac
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - floor
 
   ISAAC-sensor-database:
     image: mysql
-    networks:
-      - ISAAC-network
-    ports:
-      - 3307:3306
     environment:
-      MYSQL_DATABASE: isaac
       MYSQL_ROOT_PASSWORD: isaac
-
-  ISAAC-sensor-log-database:
-    image: mysql
-    networks:
-      - ISAAC-network
+    expose:
+      - 3307
     ports:
-      - 3308:3306
-    environment:
-      MYSQL_DATABASE: isaac
-      MYSQL_ROOT_PASSWORD: isaac
-
-  ISAAC-floor-phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+      - "3307:3306"
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
     networks:
-      - ISAAC-network
-    ports:
-      - 8080:80
-    environment:
-      PMA_HOST: ISAAC-floor-database
-    depends_on:
-      - ISAAC-floor-database
+      - sensor
 
-  ISAAC-sensor-phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    networks:
-      - ISAAC-network
-    ports:
-      - 8081:80
+  ISAAC-sensor-back-end:
+    image: jjuless/isaac-sensor-back-end
+    links:
+      - "ISAAC-sensor-database:database-sensor"
     environment:
-      PMA_HOST: ISAAC-sensor-database
+      DB_HOST: database-sensor
+      DB_USER: root
+      DB_PASSWORD: isaac
+      DB_DATABASE: isaac
+      DB_PORT: 3307
+      DB_DIALECT: mysql
+    ports:
+      - "3001:3001"
+    restart: on-failure
     depends_on:
       - ISAAC-sensor-database
-
-  ISAAC-sensor-log-phpmyadmin:
-    image: phpmyadmin/phpmyadmin
     networks:
-      - ISAAC-network
-    ports:
-      - 8082:80
+      - sensor
+
+  ISAAC-floor-back-end:
+    image: jjuless/isaac-floor-back-end
+    links:
+      - "ISAAC-floor-database:database-floor"
     environment:
-      PMA_HOST: ISAAC-sensor-log-database
+      DB_HOST: database-floor
+      DB_USER: root
+      DB_PASSWORD: isaac
+      DB_DATABASE: isaac
+      DB_PORT: 3306
+      DB_DIALECT: mysql
+    ports:
+      - "3000:3000"
+    restart: on-failure
     depends_on:
-      - ISAAC-sensor-log-database
+      - ISAAC-floor-database
+    networks:
+      - floor
 
 networks:
-  ISAAC-network:
+  floor:
+  sensor:
