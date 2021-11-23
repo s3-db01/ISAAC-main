@@ -24,7 +24,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: isaac
     ports:
-      - "3308:3308"
+      - "3308:3306"
     volumes:
       - ./sql-scripts:/docker-entrypoint-initdb.d
 
@@ -66,3 +66,8 @@ services:
     ports:
       - "3002:3002"
     restart: on-failure
+
+  ISAAC-mqtt-server:
+    image: mtolmtomt/mqtt-client
+    ports:
+      - "2020:2020"
