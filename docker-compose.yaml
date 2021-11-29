@@ -28,6 +28,15 @@ services:
     volumes:
       - ./sql-scripts:/docker-entrypoint-initdb.d
 
+  biddify-product-db-admin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: ISAAC-sensor-log-database
+    depends_on:
+      - ISAAC-sensor-log-database
+
   ISAAC-floor-back-end:
     image: jjuless/isaac-floor-back-end
     environment:
@@ -66,8 +75,3 @@ services:
     ports:
       - "3002:3002"
     restart: on-failure
-
-  ISAAC-mqtt-server:
-    image: mtolmtomt/mqtt-client
-    ports:
-      - "2020:2020"
