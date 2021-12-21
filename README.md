@@ -11,7 +11,6 @@ To start up the project open a terminal window and go to the rootfolder of this 
 | ISAAC-floor-back-end      | localhost:3000 | 3000 | API      | ExpressJS & Sequelize |
 | ISAAC-sensor-back-end     | localhost:3001 | 3001 | API      | ExpressJS & Sequelize |
 | ISAAC-sensor-log-back-end | localhost:3002 | 3002 | API      | ExpressJS & Sequelize |
-| ISAAC-mqtt-data-saver     | localhost:3003 | 3003 | Backend  | NodeJS & Axios        |
 | ISAAC-frontend            | localhost:3005 | 3005 | Webapp   | ReactJS               |
 | ISAAC-floor-database      | localhost:3306 | 3306 | Database | MySQL                 |
 | ISAAC-sensor-database     | localhost:3307 | 3307 | Database | MySQL                 |
