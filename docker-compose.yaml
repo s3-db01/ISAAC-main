@@ -75,3 +75,12 @@ services:
     ports:
       - "3002:3002"
     restart: on-failure
+  
+  ISAAC-front-end:
+    image: af912/isaac-frontend
+    environment:
+      SKIP_PREFLIGHT_CHECK: "true"
+      PORT: 3005 
+    ports:
+      - "3005:3005"
+    restart: on-failure
